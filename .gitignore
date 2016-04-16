@@ -2,3 +2,5 @@
 dist
 working
 master
+*.swp
+conf/s3/
