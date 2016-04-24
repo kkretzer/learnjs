@@ -11,6 +11,31 @@ learnjs.problems = [
     description: "Simple Math",
     code: "function problem() { return 42 === 6 * __; }"
   }
+  ,{
+    description: "Array Indexing",
+    code: "function problem() {\n" +
+    "  var a = ['foo', 'bar'];\n" +
+    "  return a[__] === 'bar';\n}"
+  }
+  ,{
+    description: "How many?",
+    code: "function problem() {\n" +
+    "  var a = ['foo', 'bar'];\n" +
+    "  return a.__ === 2;\n}"
+  }
+  ,{
+    description: "Make it bigger",
+    code: "function problem() {\n" +
+    "  var a = ['foo', 'bar'];\n" +
+    "  a.__;\n" +
+    "  return a[2] === 'a third item';\n}"
+  }
+  ,{
+    description: "Functions",
+    code: "function problem() {\n" +
+    "  var f = __;\n" +
+    "  return f();\n}"
+  }
 ];
 
 learnjs.showView = function(hash) {
