@@ -7,6 +7,8 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css'>
     <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
+    <script src='https://apis.google.com/js/platform.js' async defer></script>
+    <meta name="google-signin-client_id" content="167565469194-sv43irrdol3qgbum3m8jtgj1qq3fid58.apps.googleusercontent.com" />
     <script src='/vendor.js'></script>
     <script src='/app.js'></script>
     <style type="text/css" media="all">
@@ -36,6 +38,10 @@
         padding-left: 40px;
         background: #666;
       }
+      .navbar-padding {
+        padding-top: 7px;
+        display: inline-block;
+      }
       .nav-container a { color: white; }
       .text-lg { font-size: 2.0em; }
     </style>
@@ -47,6 +53,11 @@
           <li><a class='text-lg' href="#">LearnJS</a></li>
           <li><a href="#problem-1">Start</a></li>
         </ul>
+        <div class="four columns signin-bar">
+          <span class="navbar-padding u-pull-right">
+            <span class="g-signin2" data-onsuccess="googleSignIn"></span>
+          </span>
+        </div>
       </div>
       <div class='view-container container'>
       </div>
@@ -61,6 +72,13 @@
               <img src='/images/HeroImage.jpg'/>
             </div>
           </div>
+        </div>
+        <div class='profile-view'>
+          <h3>Your Profile</h3>
+          <div class='email'></div>
+        </div>
+        <div class='profile-link navbar-padding-lg'>
+          <a href="#profile"></a>
         </div>
         <div class='problem-view'>
           <h3 class='title'></h3>

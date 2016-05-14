@@ -4,3 +4,5 @@ working
 master
 *.swp
 conf/s3/
+conf/cognito/identity_pools/learnjs/
+conf/cognito/identity_pools/learnjs_test/
