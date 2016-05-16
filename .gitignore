@@ -6,3 +6,4 @@ master
 conf/s3/
 conf/cognito/identity_pools/learnjs/
 conf/cognito/identity_pools/learnjs_test/
+conf/dynamodb/tables/learnjs/
