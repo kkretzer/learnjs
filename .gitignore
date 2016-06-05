@@ -7,3 +7,6 @@ conf/s3/
 conf/cognito/identity_pools/learnjs/
 conf/cognito/identity_pools/learnjs_test/
 conf/dynamodb/tables/learnjs/
+conf/iam/roles/learnjs_lambda_exec/
+conf/lambda/functions/echo/info.json
+conf/lambda/functions/popularAnswers/info.json

@@ -90,6 +90,7 @@ learnjs.showView = function(hash) {
   var routes = {
     '#problem': learnjs.problemView,
     '#profile': learnjs.profileView,
+    '#popularAnswers': learnjs.popularAnswersView,
     '#': learnjs.landingView,
     '': learnjs.landingView
   };
@@ -97,7 +98,8 @@ learnjs.showView = function(hash) {
   var viewFn = routes[hashParts[0]];
   if (viewFn) {
     learnjs.triggerEvent('removingView', []);
-    $('.view-container').empty().append(viewFn(hashParts[1]));
+    var view = viewFn(hashParts[1]);
+    $('.view-container').empty().append(view);
   }
 };
 
@@ -151,6 +153,13 @@ learnjs.problemView = function(data) {
     });
   }
 
+  var popularButton = learnjs.template('popular-btn');
+  popularButton.find('a').attr('href', '#popularAnswers-' + problemNumber);
+  $('.nav-list').append(popularButton);
+  view.bind('removingView', function() {
+    popularButton.remove();
+  });
+
   return view;
 };
 
@@ -188,6 +197,52 @@ learnjs.appOnReady = function() {
   learnjs.identity.done(learnjs.addProfileLink);
 };
 
+learnjs.popularAnswersView = function(data) {
+  var problemNumber = parseInt(data, 10);
+  var view = learnjs.template('popular-answers-view');
+  var problemData = learnjs.problems[problemNumber - 1];
+  view.find('.title').text('Problem #' + problemNumber);
+  learnjs.applyObject(problemData, view);
+
+
+  var buttonItem = learnjs.template('try-problem-btn');
+  buttonItem.find('a').attr('href', '#problem-' + (problemNumber));
+  $('.nav-list').append(buttonItem);
+  view.bind('removingView', function() {
+    buttonItem.remove();
+  });
+
+  learnjs.popularAnswers(problemNumber).then(function(data) {
+    var answers = JSON.parse(data.Payload);
+    var answerTexts = Object.keys(answers).sort(function(a,b) {
+      return (answers[a] < answers[b]) ? -1 : ((answers[a] > answers[b]) ? 1 : 0);
+    }).reverse();
+    
+    var ul = view.find('ul');
+    answerTexts.forEach(function(answer) {
+      var answerItem = learnjs.template('popular-answer');
+      answerItem.find('.answer-count').text(answers[answer] + " times:");
+      answerItem.find('.answer-text').text(answer);
+      ul.append(answerItem);
+    });
+  });
+
+  return view;
+};
+
+learnjs.popularAnswers = function(problemId) {
+  return learnjs.identity.then(function() {
+    var lambda = new AWS.Lambda();
+    var params = {
+      FunctionName: 'popularAnswers',
+      Payload: JSON.stringify({problemNumber: problemId})
+    };
+    return learnjs.sendAwsRequest(lambda.invoke(params), function() {
+      return learnjs.popularAnswers(problemId);
+    });
+  });
+};
+
 learnjs.applyObject = function(obj, elem) {
   for (var key in obj) {
     elem.find('[data-name="' + key + '"]').text(obj[key]);
@@ -205,7 +260,7 @@ learnjs.triggerEvent = function(name, args) {
   $('.view-container>*').trigger(name, args);
 };
 
-learnjs.sendDbRequest = function(req, retry) {
+learnjs.sendAwsRequest = function(req, retry) {
   var promise = new $.Deferred();
   req.on('error', function(error) {
     if (error.code === 'CredentialsError') {
@@ -238,7 +293,7 @@ learnjs.saveAnswer = function(problemId, answer) {
         answer: answer
       }
     };
-    return learnjs.sendDbRequest(db.put(item), function() {
+    return learnjs.sendAwsRequest(db.put(item), function() {
       return learnjs.saveAnswer(problemId, answer);
     });
   });
@@ -254,7 +309,7 @@ learnjs.fetchAnswer = function(problemId) {
         problemId: problemId
       }
     };
-    return learnjs.sendDbRequest(db.get(item), function() {
+    return learnjs.sendAwsRequest(db.get(item), function() {
       return learnjs.fetchAnswer(problemId);
     });
   });
@@ -269,7 +324,7 @@ learnjs.countAnswers = function(problemId) {
       FilterExpression: 'problemId = :problemId',
       ExpressionAttributeValues: {':problemId': problemId}
     };
-    return learnjs.sendDbRequest(db.scan(params), function() {
+    return learnjs.sendAwsRequest(db.scan(params), function() {
       return learnjs.countAnswers(problemId);
     });
   });

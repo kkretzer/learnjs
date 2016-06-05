@@ -44,6 +44,7 @@
       }
       .nav-container a { color: white; }
       .text-lg { font-size: 2.0em; }
+      .profile-link { display: inline; }
     </style>
   </head>
   <body>
@@ -95,8 +96,25 @@
         <div class='correct-flash'>
           <span>Correct!</span> <a>Next Problem</a>
         </div>
+        <div class='popular-answers-view'>
+          <h3 class='title'></h3>
+          <p data-name='description'></p>
+          <pre><code data-name='code'></code></pre>
+          <h6>Popular Answers:</h6>
+          <ul></ul>
+        </div>
+        <li class='popular-answer'>
+          <div class="answer-count"></div>
+          <code class="answer-text"></code>
+        </li>
+        <li class='popular-btn'>
+          <a>Popular Answers</a>
+        </li>
         <li class='skip-btn'>
           <a>Skip This Problem</a>
+        </li>
+        <li class='try-problem-btn'>
+          <a>Try Problem</a>
         </li>
       </div>
     </div>
